@@ -1,3 +1,3 @@
 export function Modal({ largeImageURL }) {
-  return <img src={largeImageURL} alt="" width="800px" />;
+  return <img src={largeImageURL} alt="" width="600px" />;
 }

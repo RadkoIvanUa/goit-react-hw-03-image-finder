@@ -22,15 +22,21 @@ export class App extends Component {
   async componentDidUpdate(_, prevState) {
     const currentPage = prevState.page;
     const nextPage = this.state.page;
+    console.log('nextPage :>> ', nextPage);
+
     const { searchQuery } = this.state;
-    if (currentPage !== nextPage) {
+    if (currentPage !== nextPage && nextPage !== 1) {
       try {
+        this.setState({ status: 'pending' });
         const nextPagePhotosArr = await getPhoto(searchQuery, nextPage);
+
         this.setState(prevState => {
           return {
             photosArr: [...prevState.photosArr, ...nextPagePhotosArr],
           };
         });
+
+        this.setState({ status: 'resolved' });
       } catch (error) {
         if (error.response.status === 400) {
           this.setState({ status: 'idle' });
@@ -40,10 +46,22 @@ export class App extends Component {
         }
       }
     }
+
+    if (
+      prevState.photosArr.length > 0 &&
+      prevState.searchQuery === this.state.searchQuery
+    ) {
+      window.scrollBy({
+        top: 200 * 2,
+        behavior: 'smooth',
+      });
+    }
   }
 
   handleSubmit = async searchQuery => {
-    this.setState({ searchQuery, status: 'pending', photosArr: [] });
+    this.setState({ searchQuery, status: 'pending', photosArr: [], page: 1 });
+
+    console.log('this.state.page :>> ', this.state.page);
 
     if (searchQuery.trim() === '') {
       return;
