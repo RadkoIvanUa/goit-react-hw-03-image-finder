@@ -28,6 +28,7 @@ export class App extends Component {
       this.setState(prevState => {
         return {
           photosArr: [...prevState.photosArr, ...nextPagePhotosArr],
+          largeImageURL: '',
         };
       });
     }
