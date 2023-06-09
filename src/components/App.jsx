@@ -59,7 +59,9 @@ export class App extends Component {
   };
 
   getModalData = url => {
-    this.setState({ largeImageURL: url, isModalOpen: true });
+    if (url) {
+      this.setState({ largeImageURL: url, isModalOpen: true });
+    }
   };
 
   render() {

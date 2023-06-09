@@ -19,15 +19,9 @@ export class Modal extends Component {
     isModalOpen: false,
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log('prevProps.isModalOpen  :>> ', prevProps.isModalOpen);
-    console.log('this.props.isModalOpen  :>> ', this.props.isModalOpen);
-
-    if (
-      prevProps.isModalOpen !== this.props.isModalOpen ||
-      prevProps.largeImageURL !== this.props.largeImageURL
-    ) {
-      this.setState({ isModalOpen: this.props.isModalOpen });
+  componentDidUpdate(_, prevState) {
+    if (prevState.isModalOpen !== this.props.isModalOpen) {
+      this.setState({ isModalOpen: true });
     }
   }
 
