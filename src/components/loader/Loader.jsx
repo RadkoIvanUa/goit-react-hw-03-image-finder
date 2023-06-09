@@ -1,12 +1,13 @@
-import { FallingLines } from 'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner';
 
 export function Loader() {
   return (
-    <FallingLines
-      color="#4fa94d"
+    <ThreeDots
+      color="#303f9f"
       width="100"
       visible={true}
-      ariaLabel="falling-lines-loading"
+      ariaLabel="three-dots-loading"
+      wrapperStyle={{ margin: '0 auto' }}
     />
   );
 }

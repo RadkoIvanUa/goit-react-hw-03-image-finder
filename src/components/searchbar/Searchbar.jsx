@@ -1,5 +1,13 @@
 import { Component } from 'react';
 
+import {
+  SearchbarConatiner,
+  SearchForm,
+  SearchFormButton,
+  SearchFormButtonLAbel,
+  SearchFormInput,
+} from './StyledSearchbar';
+
 export class Searchbar extends Component {
   state = {
     searchQuery: '',
@@ -7,8 +15,9 @@ export class Searchbar extends Component {
   };
 
   heandleSubmit = e => {
-    const { searchQuery } = this.state;
     e.preventDefault();
+
+    const { searchQuery } = this.state;
     this.props.onSubmit(searchQuery);
   };
 
@@ -19,6 +28,7 @@ export class Searchbar extends Component {
       searchQuery: value,
       isSubmitButtonDisabled: false,
     });
+
     if (value.trim() === '') {
       this.setState({
         isSubmitButtonDisabled: true,
@@ -28,19 +38,19 @@ export class Searchbar extends Component {
 
   render() {
     const { searchQuery, isSubmitButtonDisabled } = this.state;
+
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.heandleSubmit}>
-          <button
+      <SearchbarConatiner>
+        <SearchForm onSubmit={this.heandleSubmit}>
+          <SearchFormButton
             type="submit"
             disabled={isSubmitButtonDisabled}
             className="button"
           >
-            <span className="button-label">Search</span>
-          </button>
+            <SearchFormButtonLAbel>Search</SearchFormButtonLAbel>
+          </SearchFormButton>
 
-          <input
-            className="input"
+          <SearchFormInput
             type="text"
             autoComplete="off"
             autoFocus
@@ -48,8 +58,8 @@ export class Searchbar extends Component {
             value={searchQuery}
             onChange={this.heandleSearchInputChange}
           />
-        </form>
-      </header>
+        </SearchForm>
+      </SearchbarConatiner>
     );
   }
 }

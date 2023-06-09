@@ -1,5 +1,7 @@
 import { Component } from 'react';
 
+import { LoadMoreButton } from './StyledButton';
+
 export class Button extends Component {
   hendleLoadMore = () => {
     this.props.onClick(1);
@@ -7,9 +9,9 @@ export class Button extends Component {
 
   render() {
     return (
-      <button type="button" onClick={this.hendleLoadMore}>
+      <LoadMoreButton type="button" onClick={this.hendleLoadMore}>
         Load more
-      </button>
+      </LoadMoreButton>
     );
   }
 }
