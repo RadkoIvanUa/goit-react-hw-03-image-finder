@@ -1,5 +1,7 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
+// STYLED COMPONENT
 import {
   GalleryItem,
   GalleryItemImg,
@@ -7,7 +9,7 @@ import {
 
 export class ImageGaleryItem extends Component {
   render() {
-    const { webformatURL, id, largeImageURL } = this.props;
+    const { webformatURL, largeImageURL } = this.props;
 
     return (
       <GalleryItem>
@@ -15,10 +17,14 @@ export class ImageGaleryItem extends Component {
           src={webformatURL}
           alt=""
           width="100px"
-          id={id}
           data-large={largeImageURL}
         />
       </GalleryItem>
     );
   }
 }
+
+ImageGaleryItem.propTypes = {
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+};

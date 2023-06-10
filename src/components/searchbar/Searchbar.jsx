@@ -1,5 +1,8 @@
 import { Component } from 'react';
+import { MdImageSearch } from 'react-icons/md';
+import PropTypes from 'prop-types';
 
+//STYLED COMPONENTS
 import {
   SearchbarConatiner,
   SearchForm,
@@ -47,7 +50,8 @@ export class Searchbar extends Component {
             disabled={isSubmitButtonDisabled}
             className="button"
           >
-            <SearchFormButtonLAbel>Search</SearchFormButtonLAbel>
+            <MdImageSearch style={{ color: 'black' }} />
+            <SearchFormButtonLAbel></SearchFormButtonLAbel>
           </SearchFormButton>
 
           <SearchFormInput
@@ -63,3 +67,7 @@ export class Searchbar extends Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

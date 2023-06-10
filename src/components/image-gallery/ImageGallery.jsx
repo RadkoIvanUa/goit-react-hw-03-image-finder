@@ -1,14 +1,19 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactModal from 'react-modal';
+
+// BODYSCROLL LOCK LIBRARY
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
+// COMPONENTS
 import { ImageGaleryItem } from 'components/image-gallery-item/ImageGalleryItem';
 import { Modal } from 'components/modal/Modal';
 
+// STYLED COMPONENT
 import { ImageGalleryConatiner } from './StyledImageGallery';
 
+//FOR REACT MODAL
 ReactModal.setAppElement('#root');
-
 const customStyles = {
   content: {
     top: '50%',
@@ -28,6 +33,12 @@ export class ImageGallery extends Component {
     largeImageURL: '',
   };
 
+  //CLOSE MODAL AFTER NEW SERCH QUERY
+  componentDidUpdate(prevProps, _) {
+    if (prevProps.photosArr.length !== this.props.photosArr.length)
+      this.setState({ isModalOpen: false });
+  }
+
   handleModalOpen = e => {
     const largeImageURL = e.target.dataset.large;
     if (!largeImageURL) {
@@ -45,9 +56,9 @@ export class ImageGallery extends Component {
     return (
       <>
         <ImageGalleryConatiner onClick={this.handleModalOpen}>
-          {this.props.photosArr.map(({ id, webformatURL, largeImageURL }) => (
+          {this.props.photosArr.map(({ webformatURL, largeImageURL }) => (
             <ImageGaleryItem
-              key={id}
+              key={webformatURL}
               webformatURL={webformatURL}
               largeImageURL={largeImageURL}
             />
@@ -67,3 +78,8 @@ export class ImageGallery extends Component {
     );
   }
 }
+
+ImageGallery.propTypes = {
+  photosArr: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getLargePhotoURL: PropTypes.func.isRequired,
+};

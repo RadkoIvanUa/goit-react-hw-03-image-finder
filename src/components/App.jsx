@@ -2,13 +2,16 @@ import { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// COMPONENTS
 import { Loader } from './loader/Loader';
 import { Searchbar } from './searchbar/Searchbar';
 import { ImageGallery } from './image-gallery/ImageGallery';
 import { Button } from './button/Button';
 
+// GET PHOTO FUNC
 import { getPhoto } from '../helpers/axios';
 
+// STYLED COMPONENT
 import { MainApp } from 'components/StyledApp';
 
 export class App extends Component {
@@ -19,10 +22,10 @@ export class App extends Component {
     status: 'idle',
   };
 
+  // UPDATE COMPONENTS AFTER CLICK ON "LOAD MORE" BUTTON
   async componentDidUpdate(_, prevState) {
     const currentPage = prevState.page;
     const nextPage = this.state.page;
-    console.log('nextPage :>> ', nextPage);
 
     const { searchQuery } = this.state;
     if (currentPage !== nextPage && nextPage !== 1) {
@@ -30,13 +33,20 @@ export class App extends Component {
         this.setState({ status: 'pending' });
         const nextPagePhotosArr = await getPhoto(searchQuery, nextPage);
 
+        if (nextPagePhotosArr.length === 0) {
+          this.setState({ status: 'idle' });
+          toast.info(
+            `We're sorry, but you've reached the end of search results`
+          );
+          return;
+        }
+
         this.setState(prevState => {
           return {
             photosArr: [...prevState.photosArr, ...nextPagePhotosArr],
+            status: 'resolved',
           };
         });
-
-        this.setState({ status: 'resolved' });
       } catch (error) {
         if (error.response.status === 400) {
           this.setState({ status: 'idle' });
@@ -47,6 +57,7 @@ export class App extends Component {
       }
     }
 
+    // SMOOTH SCROLL TO NEXT PAGE PHOTO
     if (
       prevState.photosArr.length > 0 &&
       prevState.searchQuery === this.state.searchQuery
@@ -58,10 +69,9 @@ export class App extends Component {
     }
   }
 
+  //AFTER CLICK ON SEARCH BUTTON
   handleSubmit = async searchQuery => {
-    this.setState({ searchQuery, status: 'pending', photosArr: [], page: 1 });
-
-    console.log('this.state.page :>> ', this.state.page);
+    this.setState({ searchQuery, status: 'pending', photosArr: [] });
 
     if (searchQuery.trim() === '') {
       return;
@@ -75,9 +85,10 @@ export class App extends Component {
       return;
     }
 
-    this.setState({ photosArr: searchedPhotos, status: 'resolved' });
+    this.setState({ photosArr: searchedPhotos, status: 'resolved', page: 1 });
   };
 
+  // UPDATE NEXT PAGE
   onLoandMore = step => {
     this.setState(prevState => {
       return {
@@ -86,9 +97,10 @@ export class App extends Component {
     });
   };
 
+  // GET LARGE IMAGE URL FOR MODAL WINDOW
   getModalData = url => {
     if (url) {
-      this.setState({ largeImageURL: url, isModalOpen: true });
+      this.setState({ largeImageURL: url });
     }
   };
 
