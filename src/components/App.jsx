@@ -20,31 +20,42 @@ export class App extends Component {
     page: 1,
     searchQuery: '',
     status: 'idle',
+    showLoadMoreBtn: true,
   };
 
   // UPDATE COMPONENTS AFTER CLICK ON "LOAD MORE" BUTTON
   async componentDidUpdate(_, prevState) {
+    const currentQuery = prevState.searchQuery;
+    const nextQuery = this.state.searchQuery;
     const currentPage = prevState.page;
     const nextPage = this.state.page;
 
-    const { searchQuery } = this.state;
-    if (currentPage !== nextPage && nextPage !== 1) {
+    if (currentQuery !== nextQuery || currentPage !== nextPage) {
       try {
-        this.setState({ status: 'pending' });
-        const nextPagePhotosArr = await getPhoto(searchQuery, nextPage);
+        this.setState({ status: 'pending', showLoadMoreBtn: true });
+        const getPhotoResponse = await getPhoto(nextQuery, nextPage);
+        const nextPagePhotosArr = getPhotoResponse.hits;
 
         if (nextPagePhotosArr.length === 0) {
-          this.setState({ status: 'idle' });
+          toast.error('No results found!');
+          this.setState({ status: 'error' });
+          return;
+        }
+
+        const loadMoreBtnStatus =
+          this.state.page < Math.ceil(getPhotoResponse.totalHits / 12);
+
+        if (!loadMoreBtnStatus) {
           toast.info(
             `We're sorry, but you've reached the end of search results`
           );
-          return;
         }
 
         this.setState(prevState => {
           return {
             photosArr: [...prevState.photosArr, ...nextPagePhotosArr],
             status: 'resolved',
+            showLoadMoreBtn: loadMoreBtnStatus,
           };
         });
       } catch (error) {
@@ -71,21 +82,11 @@ export class App extends Component {
 
   //AFTER CLICK ON SEARCH BUTTON
   handleSubmit = async searchQuery => {
-    this.setState({ searchQuery, status: 'pending', photosArr: [] });
+    this.setState({ searchQuery, status: 'pending', photosArr: [], page: 1 });
 
     if (searchQuery.trim() === '') {
       return;
     }
-
-    const searchedPhotos = await getPhoto(searchQuery, 1);
-
-    if (searchedPhotos.length === 0) {
-      toast.error('No results found!');
-      this.setState({ status: 'error' });
-      return;
-    }
-
-    this.setState({ photosArr: searchedPhotos, status: 'resolved', page: 1 });
   };
 
   // UPDATE NEXT PAGE
@@ -105,7 +106,7 @@ export class App extends Component {
   };
 
   render() {
-    const { photosArr, status } = this.state;
+    const { photosArr, status, showLoadMoreBtn } = this.state;
 
     return (
       <MainApp>
@@ -115,7 +116,9 @@ export class App extends Component {
           getLargePhotoURL={this.getModalData}
         />
         {status === 'pending' && <Loader />}
-        {status === 'resolved' && <Button onClick={this.onLoandMore} />}
+        {status === 'resolved' && showLoadMoreBtn && (
+          <Button onClick={this.onLoandMore} />
+        )}
         <ToastContainer autoClose={3000} />
       </MainApp>
     );
