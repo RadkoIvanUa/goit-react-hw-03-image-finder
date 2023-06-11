@@ -82,11 +82,10 @@ export class App extends Component {
 
   //AFTER CLICK ON SEARCH BUTTON
   handleSubmit = async searchQuery => {
-    this.setState({ searchQuery, status: 'pending', photosArr: [], page: 1 });
-
     if (searchQuery.trim() === '') {
       return;
     }
+    this.setState({ searchQuery, status: 'pending', photosArr: [], page: 1 });
   };
 
   // UPDATE NEXT PAGE
