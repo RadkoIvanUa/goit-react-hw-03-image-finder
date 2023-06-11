@@ -100,6 +100,7 @@ export class App extends Component {
 
   // GET LARGE IMAGE URL FOR MODAL WINDOW
   getModalData = url => {
+    console.log(url);
     if (url) {
       this.setState({ largeImageURL: url });
     }
@@ -111,10 +112,7 @@ export class App extends Component {
     return (
       <MainApp>
         <Searchbar onSubmit={this.handleSubmit} />
-        <ImageGallery
-          photosArr={photosArr}
-          getLargePhotoURL={this.getModalData}
-        />
+        <ImageGallery photosArr={photosArr} />
         {status === 'pending' && <Loader />}
         {status === 'resolved' && showLoadMoreBtn && (
           <Button onClick={this.onLoandMore} />
