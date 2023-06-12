@@ -17,40 +17,22 @@ const customStyles = {
     transform: 'translate(-50%, -50%)',
     padding: 0,
   },
-  overlay: { backgroundColor: 'rgba(0, 0, 0, 0.8)' },
+  overlay: { backgroundColor: 'rgba(0, 0, 0, 0.8)', zIndex: 1200 },
 };
 
 export class Modal extends Component {
-  state = {
-    isModalOpen: false,
-    largeImageURL: '',
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.largeImageURL !== this.props.largeImageURL) {
-      this.setState({
-        isModalOpen: true,
-        largeImageURL: this.props.largeImageURL,
-      });
-    }
-    //CLOSE MODAL AFTER NEW SERCH QUERY
-    if (prevProps.photosArr.length !== this.props.photosArr.length)
-      this.setState({ isModalOpen: false });
-  }
-  handleCloseModal = () =>
-    this.setState({ isModalOpen: false, largeImageURL: '' });
-
   render() {
+    const { isModalOpen, onCloseModal, largeImageURL } = this.props;
     return (
       <>
         <ReactModal
           style={customStyles}
-          isOpen={this.state.isModalOpen}
-          onRequestClose={this.handleCloseModal}
+          isOpen={isModalOpen}
+          onRequestClose={onCloseModal}
           onAfterOpen={disableBodyScroll}
           onAfterClose={clearAllBodyScrollLocks}
         >
-          <img src={this.state.largeImageURL} alt="" width="600px" />
+          <img src={largeImageURL} alt="" width="800px" />
         </ReactModal>
       </>
     );
@@ -59,5 +41,6 @@ export class Modal extends Component {
 
 Modal.propTypes = {
   largeImageURL: PropTypes.string.isRequired,
-  photosArr: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isModalOpen: PropTypes.bool.isRequired,
+  onCloseModal: PropTypes.func.isRequired,
 };

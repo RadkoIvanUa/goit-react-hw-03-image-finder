@@ -23,8 +23,10 @@ export class ImageGallery extends Component {
 
     this.setState({ largeImageURL, isModalOpen: true });
   };
+
+  hendleModalClose = () => this.setState({ isModalOpen: false });
   render() {
-    const { largeImageURL } = this.state;
+    const { largeImageURL, isModalOpen } = this.state;
     return (
       <>
         <ImageGalleryConatiner onClick={this.handleModalOpen}>
@@ -36,8 +38,9 @@ export class ImageGallery extends Component {
             />
           ))}
           <Modal
-            photosArr={this.props.photosArr}
             largeImageURL={largeImageURL}
+            isModalOpen={isModalOpen}
+            onCloseModal={this.hendleModalClose}
           />
         </ImageGalleryConatiner>
       </>
